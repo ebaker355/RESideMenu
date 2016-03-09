@@ -1,5 +1,5 @@
 //
-// REFrostedViewController.h
+// RESideMenu.h
 // RESideMenu
 //
 // Copyright (c) 2013-2014 Roman Efimov (https://github.com/romaonthego)
@@ -23,7 +23,19 @@
 // THE SOFTWARE.
 //
 
+#import <Foundation/Foundation.h>
+
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#endif
+
+//! Project version number for RESideMenu.
+FOUNDATION_EXPORT double RESideMenuVersionNumber;
+
+//! Project version string for RESideMenu.
+FOUNDATION_EXPORT const unsigned char RESideMenuVersionString[];
+
+#import "RECommonFunctions.h"
 #import "UIViewController+RESideMenu.h"
 
 #ifndef IBInspectable

@@ -1,5 +1,5 @@
 //
-// REFrostedViewController.m
+// RESideMenu.m
 // RESideMenu
 //
 // Copyright (c) 2013-2014 Roman Efimov (https://github.com/romaonthego)
