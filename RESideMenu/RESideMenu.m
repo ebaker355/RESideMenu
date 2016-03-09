@@ -160,8 +160,11 @@
 - (void)setContentViewController:(UIViewController*)contentViewController animated:(BOOL)animated
 {
     if (_contentViewController == contentViewController) {
+        self.contentViewControllerChanged = NO;
         return;
     }
+
+    self.contentViewControllerChanged = YES;
 
     if (!animated) {
         [self setContentViewController:contentViewController];
@@ -380,8 +383,13 @@
     BOOL rightMenuVisible = self.rightMenuVisible;
     UIViewController* visibleMenuViewController = rightMenuVisible ? self.rightMenuViewController : self.leftMenuViewController;
     [visibleMenuViewController beginAppearanceTransition:NO animated:animated];
-    if ([self.delegate conformsToProtocol:@protocol(RESideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenu:willHideMenuViewController:)]) {
-        [self.delegate sideMenu:self willHideMenuViewController:rightMenuVisible ? self.rightMenuViewController : self.leftMenuViewController];
+    if ([self.delegate conformsToProtocol:@protocol(RESideMenuDelegate)]) {
+        if ([self.delegate respondsToSelector:@selector(sideMenu:willHideMenuViewController:)]) {
+            [self.delegate sideMenu:self willHideMenuViewController:rightMenuVisible ? self.rightMenuViewController : self.leftMenuViewController];
+        }
+        if ([self.delegate respondsToSelector:@selector(sideMenu:willHideMenuViewController:contentViewControllerChanged:)]) {
+            [self.delegate sideMenu:self willHideMenuViewController:rightMenuVisible ? self.rightMenuViewController : self.leftMenuViewController contentViewControllerChanged:self.contentViewControllerChanged];
+        }
     }
 
     self.visible = NO;
@@ -421,8 +429,13 @@
         }
         [visibleMenuViewController endAppearanceTransition];
         [self statusBarNeedsAppearanceUpdate];
-        if (!strongSelf.visible && [strongSelf.delegate conformsToProtocol:@protocol(RESideMenuDelegate)] && [strongSelf.delegate respondsToSelector:@selector(sideMenu:didHideMenuViewController:)]) {
-            [strongSelf.delegate sideMenu:strongSelf didHideMenuViewController:rightMenuVisible ? strongSelf.rightMenuViewController : strongSelf.leftMenuViewController];
+        if (!strongSelf.visible && [strongSelf.delegate conformsToProtocol:@protocol(RESideMenuDelegate)]) {
+            if ([strongSelf.delegate respondsToSelector:@selector(sideMenu:didHideMenuViewController:)]) {
+                [strongSelf.delegate sideMenu:strongSelf didHideMenuViewController:rightMenuVisible ? strongSelf.rightMenuViewController : strongSelf.leftMenuViewController];
+            }
+            if ([strongSelf.delegate respondsToSelector:@selector(sideMenu:didHideMenuViewController:contentViewControllerChanged:)]) {
+                [strongSelf.delegate sideMenu:strongSelf didHideMenuViewController:rightMenuVisible ? strongSelf.rightMenuViewController : strongSelf.leftMenuViewController contentViewControllerChanged:self.contentViewControllerChanged];
+            }
         }
     };
 
@@ -516,19 +529,19 @@
     if (self.parallaxEnabled) {
         IF_IOS7_OR_GREATER(
             for (UIMotionEffect* effect in self.contentViewContainer.motionEffects) {
-                               [self.contentViewContainer removeMotionEffect:effect];
+                [self.contentViewContainer removeMotionEffect:effect];
             }
             [UIView animateWithDuration:0.2 animations:^{
-            UIInterpolatingMotionEffect *interpolationHorizontal = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-            interpolationHorizontal.minimumRelativeValue = @(self.parallaxContentMinimumRelativeValue);
-            interpolationHorizontal.maximumRelativeValue = @(self.parallaxContentMaximumRelativeValue);
+                UIInterpolatingMotionEffect *interpolationHorizontal = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+                interpolationHorizontal.minimumRelativeValue = @(self.parallaxContentMinimumRelativeValue);
+                interpolationHorizontal.maximumRelativeValue = @(self.parallaxContentMaximumRelativeValue);
             
-            UIInterpolatingMotionEffect *interpolationVertical = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-            interpolationVertical.minimumRelativeValue = @(self.parallaxContentMinimumRelativeValue);
-            interpolationVertical.maximumRelativeValue = @(self.parallaxContentMaximumRelativeValue);
+                UIInterpolatingMotionEffect *interpolationVertical = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+                interpolationVertical.minimumRelativeValue = @(self.parallaxContentMinimumRelativeValue);
+                interpolationVertical.maximumRelativeValue = @(self.parallaxContentMaximumRelativeValue);
             
-            [self.contentViewContainer addMotionEffect:interpolationHorizontal];
-            [self.contentViewContainer addMotionEffect:interpolationVertical];
+                [self.contentViewContainer addMotionEffect:interpolationHorizontal];
+                [self.contentViewContainer addMotionEffect:interpolationVertical];
             }];);
     }
 }
@@ -540,10 +553,10 @@
 {
     IF_IOS7_OR_GREATER(
         if (self.interactivePopGestureRecognizerEnabled && [self.contentViewController isKindOfClass:[UINavigationController class]]) {
-                           UINavigationController *navigationController = (UINavigationController *)self.contentViewController;
-                           if (navigationController.viewControllers.count > 1 && navigationController.interactivePopGestureRecognizer.enabled) {
-                               return NO;
-                           }
+            UINavigationController *navigationController = (UINavigationController *)self.contentViewController;
+            if (navigationController.viewControllers.count > 1 && navigationController.interactivePopGestureRecognizer.enabled) {
+                return NO;
+            }
         });
 
     if (self.panFromEdge && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && !self.visible) {
@@ -691,14 +704,17 @@
     if (recognizer.state == UIGestureRecognizerStateEnded) {
         self.didNotifyDelegate = NO;
         if (self.panMinimumOpenThreshold > 0 && ((self.contentViewContainer.frame.origin.x < 0 && self.contentViewContainer.frame.origin.x > -((NSInteger)self.panMinimumOpenThreshold)) || (self.contentViewContainer.frame.origin.x > 0 && self.contentViewContainer.frame.origin.x < self.panMinimumOpenThreshold))) {
+            self.contentViewControllerChanged = NO;
             [self forceHideMenuViewController];
         }
         else if (self.contentViewContainer.frame.origin.x == 0) {
+            self.contentViewControllerChanged = NO;
             [self hideMenuViewControllerAnimated:NO];
         }
         else {
             if ([recognizer velocityInView:self.view].x > 0) {
                 if (self.contentViewContainer.frame.origin.x < 0) {
+                    self.contentViewControllerChanged = NO;
                     [self forceHideMenuViewController];
                 }
                 else {
@@ -714,6 +730,7 @@
                     }
                 }
                 else {
+                    self.contentViewControllerChanged = NO;
                     [self forceHideMenuViewController];
                 }
             }

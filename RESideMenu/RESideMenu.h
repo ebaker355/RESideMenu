@@ -86,6 +86,7 @@ FOUNDATION_EXPORT const unsigned char RESideMenuVersionString[];
 @property (assign, nonatomic) IBInspectable BOOL bouncesHorizontally;
 @property (assign, nonatomic) UIStatusBarStyle menuPreferredStatusBarStyle;
 @property (assign, nonatomic) IBInspectable BOOL menuPrefersStatusBarHidden;
+@property (assign, nonatomic) BOOL contentViewControllerChanged;
 
 @property (readonly, nonatomic, getter=isVisible) BOOL visible;
 @property (readonly, nonatomic, getter=isLeftMenuVisible) BOOL leftMenuVisible;
@@ -97,6 +98,7 @@ FOUNDATION_EXPORT const unsigned char RESideMenuVersionString[];
 - (void)presentLeftMenuViewController;
 - (void)presentRightMenuViewController;
 - (void)hideMenuViewController;
+- (void)hideMenuViewControllerAnimated:(BOOL)animated;
 - (void)setContentViewController:(UIViewController*)contentViewController animated:(BOOL)animated;
 
 @end
@@ -109,5 +111,7 @@ FOUNDATION_EXPORT const unsigned char RESideMenuVersionString[];
 - (void)sideMenu:(RESideMenu*)sideMenu didShowMenuViewController:(UIViewController*)menuViewController;
 - (void)sideMenu:(RESideMenu*)sideMenu willHideMenuViewController:(UIViewController*)menuViewController;
 - (void)sideMenu:(RESideMenu*)sideMenu didHideMenuViewController:(UIViewController*)menuViewController;
+- (void)sideMenu:(RESideMenu*)sideMenu willHideMenuViewController:(UIViewController*)menuViewController contentViewControllerChanged:(BOOL)contentViewControllerChanged;
+- (void)sideMenu:(RESideMenu*)sideMenu didHideMenuViewController:(UIViewController*)menuViewController contentViewControllerChanged:(BOOL)contentViewControllerChanged;
 
 @end
