@@ -99,9 +99,9 @@
     _parallaxMenuMaximumRelativeValue = 15;
     _parallaxContentMinimumRelativeValue = -25;
     _parallaxContentMaximumRelativeValue = 25;
- 
+
     _backgroundTransformScale = 1.7;
-    
+
     _bouncesHorizontally = YES;
 
     _panGestureEnabled = YES;
@@ -420,6 +420,7 @@
             return;
         }
         [visibleMenuViewController endAppearanceTransition];
+        [self statusBarNeedsAppearanceUpdate];
         if (!strongSelf.visible && [strongSelf.delegate conformsToProtocol:@protocol(RESideMenuDelegate)] && [strongSelf.delegate respondsToSelector:@selector(sideMenu:didHideMenuViewController:)]) {
             [strongSelf.delegate sideMenu:strongSelf didHideMenuViewController:rightMenuVisible ? strongSelf.rightMenuViewController : strongSelf.leftMenuViewController];
         }
@@ -438,7 +439,6 @@
         animationBlock();
         completionBlock();
     }
-    [self statusBarNeedsAppearanceUpdate];
 }
 
 - (void)addContentButton
