@@ -29,7 +29,7 @@
 
 @interface UIViewController (RESideMenu)
 
-@property (strong, readonly, nonatomic) RESideMenu *sideMenuViewController;
+@property (strong, readonly, nonatomic) RESideMenu* sideMenuViewController;
 
 // IB Action Helper methods
 

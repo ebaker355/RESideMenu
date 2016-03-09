@@ -28,15 +28,17 @@
 
 @implementation UIViewController (RESideMenu)
 
-- (RESideMenu *)sideMenuViewController
+- (RESideMenu*)sideMenuViewController
 {
-    UIViewController *iter = self.parentViewController;
+    UIViewController* iter = self.parentViewController;
     while (iter) {
         if ([iter isKindOfClass:[RESideMenu class]]) {
-            return (RESideMenu *)iter;
-        } else if (iter.parentViewController && iter.parentViewController != iter) {
+            return (RESideMenu*)iter;
+        }
+        else if (iter.parentViewController && iter.parentViewController != iter) {
             iter = iter.parentViewController;
-        } else {
+        }
+        else {
             iter = nil;
         }
     }
