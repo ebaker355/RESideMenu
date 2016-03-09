@@ -99,7 +99,9 @@
     _parallaxMenuMaximumRelativeValue = 15;
     _parallaxContentMinimumRelativeValue = -25;
     _parallaxContentMaximumRelativeValue = 25;
-
+ 
+    _backgroundTransformScale = 1.7;
+    
     _bouncesHorizontally = YES;
 
     _panGestureEnabled = YES;
@@ -239,7 +241,7 @@
 
     self.menuViewContainer.alpha = !self.fadeMenuView ?: 0;
     if (self.scaleBackgroundImageView)
-        self.backgroundImageView.transform = CGAffineTransformMakeScale(1.7f, 1.7f);
+        self.backgroundImageView.transform = [self backgroundTransformMakeScale];
 
     [self addMenuViewControllerMotionEffects];
 
@@ -269,7 +271,7 @@
     }
     self.menuViewContainer.alpha = !self.fadeMenuView ?: 0;
     if (self.scaleBackgroundImageView)
-        self.backgroundImageView.transform = CGAffineTransformMakeScale(1.7f, 1.7f);
+        self.backgroundImageView.transform = [self backgroundTransformMakeScale];
 
     if ([self.delegate conformsToProtocol:@protocol(RESideMenuDelegate)] && [self.delegate respondsToSelector:@selector(sideMenu:willShowMenuViewController:)]) {
         [self.delegate sideMenu:self willShowMenuViewController:menuViewController];
@@ -402,7 +404,7 @@
         strongSelf.contentViewContainer.alpha = 1;
         
         if (strongSelf.scaleBackgroundImageView) {
-            strongSelf.backgroundImageView.transform = CGAffineTransformMakeScale(1.7f, 1.7f);
+            strongSelf.backgroundImageView.transform = [self backgroundTransformMakeScale];
         }
         if (strongSelf.parallaxEnabled) {
             IF_IOS7_OR_GREATER(
@@ -480,6 +482,11 @@
     self.contentViewContainer.transform = CGAffineTransformIdentity;
     self.contentViewContainer.transform = CGAffineTransformMakeScale(scale, scale);
     self.contentViewContainer.frame = frame;
+}
+
+- (CGAffineTransform)backgroundTransformMakeScale
+{
+    return CGAffineTransformMakeScale(self.backgroundTransformScale, self.backgroundTransformScale);
 }
 
 #pragma mark -

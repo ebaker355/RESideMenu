@@ -68,6 +68,7 @@ FOUNDATION_EXPORT const unsigned char RESideMenuVersionString[];
 @property (assign, nonatomic) IBInspectable BOOL scaleBackgroundImageView;
 @property (assign, nonatomic) IBInspectable BOOL scaleMenuView;
 @property (assign, nonatomic) IBInspectable BOOL contentViewShadowEnabled;
+@property (assign, nonatomic) IBInspectable CGFloat backgroundTransformScale;
 @property (strong, nonatomic) IBInspectable UIColor* contentViewShadowColor;
 @property (assign, nonatomic) IBInspectable CGSize contentViewShadowOffset;
 @property (assign, nonatomic) IBInspectable CGFloat contentViewShadowOpacity;
