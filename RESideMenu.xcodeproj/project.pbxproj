@@ -58,11 +58,11 @@
 			children = (
 				9D08DAF51B0C735600EA8198 /* RECommonFunctions.h */,
 				9D08DAF61B0C735600EA8198 /* RECommonFunctions.m */,
+				9D08DADE1B0C72A100EA8198 /* RESideMenu.h */,
 				9D08DAF71B0C735600EA8198 /* RESideMenu.m */,
+				9D08DADC1B0C72A100EA8198 /* Supporting Files */,
 				9D08DAF81B0C735600EA8198 /* UIViewController+RESideMenu.h */,
 				9D08DAF91B0C735600EA8198 /* UIViewController+RESideMenu.m */,
-				9D08DADE1B0C72A100EA8198 /* RESideMenu.h */,
-				9D08DADC1B0C72A100EA8198 /* Supporting Files */,
 			);
 			path = RESideMenu;
 			sourceTree = "<group>";
